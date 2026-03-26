@@ -13,21 +13,19 @@ const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 const GROUND_HEIGHT = 118;
 const PIPE_SPAWN_MS = 1480;
+const OBSTACLE_HEAD_HEIGHT = 106;
+const OBSTACLE_SHAFT_WIDTH = 18;
+const OBSTACLE_SHAFT_OVERLAP = 12;
 
 const art = {
   sausage: loadImage("assets/sausage.svg"),
   bean: loadImage("assets/bean.svg"),
+  mushroom: loadImage("assets/mushroom.svg"),
   knife: loadImage("assets/knife.svg"),
   fork: loadImage("assets/fork.svg"),
 };
 
-const cloudBeans = Array.from({ length: 11 }, (_, index) => ({
-  x: (index * 96) % WIDTH,
-  y: 60 + (index % 5) * 84,
-  size: 38 + (index % 4) * 10,
-  drift: 12 + (index % 3) * 6,
-  sway: Math.random() * Math.PI * 2,
-}));
+const skyDrifters = Array.from({ length: 13 }, (_, index) => createSkyDrifter(index));
 
 const game = {
   state: "ready",
@@ -64,6 +62,20 @@ function loadImage(src) {
   const img = new Image();
   img.src = src;
   return img;
+}
+
+function createSkyDrifter(index) {
+  const type = index % 4 === 0 ? "mushroom" : "bean";
+  const isMushroom = type === "mushroom";
+
+  return {
+    type,
+    x: (index * 84) % (WIDTH + 120),
+    y: 54 + (index % 5) * 86 + (isMushroom ? 14 : 0),
+    size: isMushroom ? 44 + (index % 3) * 9 : 38 + (index % 4) * 10,
+    drift: isMushroom ? 10 + (index % 2) * 5 : 13 + (index % 3) * 5,
+    sway: Math.random() * Math.PI * 2,
+  };
 }
 
 function handleKeyDown(event) {
@@ -134,7 +146,7 @@ function loop(timestamp) {
 }
 
 function update(deltaSeconds, deltaMs, timeSeconds) {
-  updateBeans(deltaSeconds, timeSeconds);
+  updateSkyDrifters(deltaSeconds, timeSeconds);
 
   if (game.state !== "playing") {
     if (game.state === "ready") {
@@ -148,14 +160,15 @@ function update(deltaSeconds, deltaMs, timeSeconds) {
   detectCollisions();
 }
 
-function updateBeans(deltaSeconds, timeSeconds) {
-  for (const bean of cloudBeans) {
-    bean.x -= bean.drift * deltaSeconds;
-    bean.y += Math.sin(timeSeconds * 0.8 + bean.sway) * 0.18;
+function updateSkyDrifters(deltaSeconds, timeSeconds) {
+  for (const drifter of skyDrifters) {
+    drifter.x -= drifter.drift * deltaSeconds;
+    drifter.y += Math.sin(timeSeconds * 0.8 + drifter.sway) * 0.18;
 
-    if (bean.x < -bean.size * 1.6) {
-      bean.x = WIDTH + bean.size;
-      bean.y = 60 + Math.random() * (HEIGHT - GROUND_HEIGHT - 220);
+    if (drifter.x < -drifter.size * 1.8) {
+      drifter.x = WIDTH + drifter.size + Math.random() * 90;
+      drifter.y = 48 + Math.random() * (HEIGHT - GROUND_HEIGHT - 240);
+      drifter.sway = Math.random() * Math.PI * 2;
     }
   }
 }
@@ -211,10 +224,10 @@ function spawnObstaclePair() {
 
 function detectCollisions() {
   const birdHitbox = {
-    x: game.bird.x - game.bird.width * 0.34,
-    y: game.bird.y - game.bird.height * 0.34,
-    width: game.bird.width * 0.68,
-    height: game.bird.height * 0.68,
+    x: game.bird.x - game.bird.width * 0.29,
+    y: game.bird.y - game.bird.height * 0.26,
+    width: game.bird.width * 0.58,
+    height: game.bird.height * 0.54,
   };
 
   const floorY = HEIGHT - GROUND_HEIGHT;
@@ -225,21 +238,12 @@ function detectCollisions() {
   }
 
   for (const obstacle of game.obstacles) {
-    const topRect = {
-      x: obstacle.x,
-      y: 0,
-      width: obstacle.width,
-      height: obstacle.topHeight,
-    };
+    const hitboxes = [
+      ...getObstacleHitboxes(obstacle, true),
+      ...getObstacleHitboxes(obstacle, false),
+    ];
 
-    const bottomRect = {
-      x: obstacle.x,
-      y: obstacle.topHeight + obstacle.gap,
-      width: obstacle.width,
-      height: floorY - (obstacle.topHeight + obstacle.gap),
-    };
-
-    if (rectIntersects(birdHitbox, topRect) || rectIntersects(birdHitbox, bottomRect)) {
+    if (hitboxes.some((rect) => rectIntersects(birdHitbox, rect))) {
       endGame();
       return;
     }
@@ -267,7 +271,7 @@ function rectIntersects(a, b) {
 
 function drawScene(timeSeconds) {
   drawBackground();
-  drawBeans();
+  drawSkyDrifters();
   drawKitchenSilhouette(timeSeconds);
   drawObstacles();
   drawCounter();
@@ -308,10 +312,13 @@ function drawBackground() {
   ctx.restore();
 }
 
-function drawBeans() {
-  for (const bean of cloudBeans) {
-    const bob = Math.sin(bean.sway + bean.x * 0.01) * 6;
-    drawImageOrFallback(art.bean, bean.x, bean.y + bob, bean.size * 1.3, bean.size);
+function drawSkyDrifters() {
+  for (const drifter of skyDrifters) {
+    const bob = Math.sin(drifter.sway + drifter.x * 0.01) * 6;
+    const isMushroom = drifter.type === "mushroom";
+    const width = isMushroom ? drifter.size * 1.08 : drifter.size * 1.3;
+    const height = isMushroom ? drifter.size : drifter.size;
+    drawImageOrFallback(art[drifter.type], drifter.x, drifter.y + bob, width, height);
   }
 }
 
@@ -333,38 +340,100 @@ function drawKitchenSilhouette(timeSeconds) {
 
 function drawObstacles() {
   for (const obstacle of game.obstacles) {
-    const topBottom = obstacle.topHeight;
-    const bottomY = obstacle.topHeight + obstacle.gap;
-    const bottomHeight = HEIGHT - GROUND_HEIGHT - bottomY;
-
-    drawObstacleColumn(obstacle.x, 0, obstacle.width, topBottom, "knife", true);
-    drawObstacleColumn(obstacle.x, bottomY, obstacle.width, bottomHeight, "fork", false);
+    drawObstacleColumn(obstacle, "knife", true);
+    drawObstacleColumn(obstacle, "fork", false);
   }
 }
 
-function drawObstacleColumn(x, y, width, height, type, upsideDown) {
+function drawObstacleColumn(obstacle, type, upsideDown) {
+  const layout = getObstacleLayout(obstacle, upsideDown);
   const utensil = type === "knife" ? art.knife : art.fork;
-  const segmentHeight = 72;
-  const headSize = width + 18;
+
+  ctx.fillStyle = type === "knife" ? "#c5d0da" : "#d9e2e8";
+  ctx.fillRect(layout.shaft.x, layout.shaft.y, layout.shaft.width, layout.shaft.height);
+
+  ctx.fillStyle = "rgba(255,255,255,0.32)";
+  ctx.fillRect(layout.shaft.x + 4, layout.shaft.y + 10, 4, Math.max(0, layout.shaft.height - 20));
 
   ctx.save();
   if (upsideDown) {
-    ctx.translate(x + width / 2, y + height / 2);
+    ctx.translate(layout.head.x + layout.head.width / 2, layout.head.y + layout.head.height / 2);
     ctx.scale(1, -1);
-    ctx.translate(-(x + width / 2), -(y + height / 2));
+    ctx.translate(-(layout.head.x + layout.head.width / 2), -(layout.head.y + layout.head.height / 2));
   }
-
-  ctx.fillStyle = type === "knife" ? "#c5d0da" : "#d9e2e8";
-  ctx.fillRect(x + width / 2 - 7, y, 14, height);
-
-  for (let segmentY = y + 16; segmentY < y + height - segmentHeight; segmentY += segmentHeight) {
-    ctx.fillStyle = "rgba(255,255,255,0.28)";
-    ctx.fillRect(x + width / 2 - 3, segmentY, 6, segmentHeight - 18);
-  }
-
-  drawImageOrFallback(utensil, x - 8, y + height - headSize + 2, width + 16, headSize);
-
+  drawImageOrFallback(utensil, layout.head.x, layout.head.y, layout.head.width, layout.head.height);
   ctx.restore();
+}
+
+function getObstacleLayout(obstacle, upsideDown) {
+  const y = upsideDown ? 0 : obstacle.topHeight + obstacle.gap;
+  const height = upsideDown ? obstacle.topHeight : HEIGHT - GROUND_HEIGHT - y;
+  const headHeight = Math.min(OBSTACLE_HEAD_HEIGHT, height);
+  const headY = upsideDown ? y + height - headHeight : y;
+  const shaftHeight = Math.max(0, height - headHeight + OBSTACLE_SHAFT_OVERLAP);
+  const shaftY = upsideDown ? y : headY + headHeight - OBSTACLE_SHAFT_OVERLAP;
+
+  return {
+    head: {
+      x: obstacle.x - 10,
+      y: headY,
+      width: obstacle.width + 20,
+      height: headHeight,
+    },
+    shaft: {
+      x: obstacle.x + obstacle.width / 2 - OBSTACLE_SHAFT_WIDTH / 2,
+      y: shaftY,
+      width: OBSTACLE_SHAFT_WIDTH,
+      height: shaftHeight,
+    },
+  };
+}
+
+function getObstacleHitboxes(obstacle, upsideDown) {
+  const layout = getObstacleLayout(obstacle, upsideDown);
+
+  if (upsideDown) {
+    return [
+      {
+        x: layout.shaft.x,
+        y: layout.shaft.y,
+        width: layout.shaft.width,
+        height: layout.shaft.height,
+      },
+      {
+        x: layout.head.x + 31,
+        y: layout.head.y + 8,
+        width: layout.head.width - 62,
+        height: Math.max(0, layout.head.height - 14),
+      },
+    ].filter((rect) => rect.width > 0 && rect.height > 0);
+  }
+
+  const tineHeight = Math.min(48, Math.max(18, layout.head.height - 34));
+  const tineY = layout.head.y + 4;
+  const tineWidth = 8;
+  const tineXs = [layout.head.x + 17, layout.head.x + 37, layout.head.x + 57, layout.head.x + 77];
+
+  return [
+    {
+      x: layout.shaft.x - 1,
+      y: layout.shaft.y,
+      width: layout.shaft.width + 2,
+      height: layout.shaft.height,
+    },
+    {
+      x: layout.head.x + 33,
+      y: layout.head.y + 42,
+      width: layout.head.width - 66,
+      height: Math.max(0, layout.head.height - 36),
+    },
+    ...tineXs.map((x) => ({
+      x,
+      y: tineY,
+      width: tineWidth,
+      height: tineHeight,
+    })),
+  ].filter((rect) => rect.width > 0 && rect.height > 0);
 }
 
 function drawCounter() {

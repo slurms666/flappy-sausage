@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 120" role="img" aria-labelledby="title desc">
+  <title id="title">Fried mushroom slice</title>
+  <desc id="desc">A browned fried mushroom slice with a buttery sheen.</desc>
+  <defs>
+    <radialGradient id="cap" cx="45%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#f3cea0"/>
+      <stop offset="65%" stop-color="#d09a62"/>
+      <stop offset="100%" stop-color="#9d673d"/>
+    </radialGradient>
+  </defs>
+  <path d="M20 68C20 38 44 18 76 18c25 0 44 17 44 38 0 22-21 34-49 34-31 0-51-8-51-22Z" fill="url(#cap)" stroke="#855333" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M40 68c10 11 26 16 46 16 12 0 25-3 35-9" fill="none" stroke="#f6e0bb" stroke-linecap="round" stroke-width="8" stroke-opacity="0.68"/>
+  <ellipse cx="74" cy="60" rx="18" ry="12" fill="#7d5130" opacity="0.45"/>
+  <path d="M41 76c9 10 20 16 33 18" fill="none" stroke="#6b4228" stroke-linecap="round" stroke-width="6"/>
+</svg>
