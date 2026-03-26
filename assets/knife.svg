@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 220" role="img" aria-labelledby="title desc">
+  <title id="title">Cartoon knife</title>
+  <desc id="desc">A stylized kitchen knife obstacle.</desc>
+  <rect x="43" y="126" width="34" height="78" rx="10" fill="#84513c"/>
+  <rect x="48" y="133" width="8" height="56" rx="4" fill="#d5a686"/>
+  <path d="M60 16c24 22 40 64 40 108H20C20 72 36 34 60 16Z" fill="#d8e0e8" stroke="#8da0b1" stroke-width="5"/>
+  <path d="M60 27c14 15 23 41 26 77H35c3-31 13-57 25-77Z" fill="#eff4f7"/>
+</svg>

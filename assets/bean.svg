@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 100" role="img" aria-labelledby="title desc">
+  <title id="title">Baked bean cluster</title>
+  <desc id="desc">Three glossy baked beans grouped together.</desc>
+  <ellipse cx="40" cy="56" rx="24" ry="17" transform="rotate(-18 40 56)" fill="#c67a2d"/>
+  <ellipse cx="68" cy="44" rx="26" ry="18" transform="rotate(16 68 44)" fill="#d78631"/>
+  <ellipse cx="92" cy="62" rx="25" ry="17" transform="rotate(-12 92 62)" fill="#be6d28"/>
+  <path d="M26 54c10-8 19-10 28-6" fill="none" stroke="#f6c78a" stroke-linecap="round" stroke-width="6"/>
+  <path d="M56 42c11-8 19-8 28-3" fill="none" stroke="#f6c78a" stroke-linecap="round" stroke-width="6"/>
+  <path d="M78 60c9-7 18-8 26-4" fill="none" stroke="#f6c78a" stroke-linecap="round" stroke-width="6"/>
+</svg>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flappy Sausage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="game-card">
+      <div class="game-header">
+        <div>
+          <p class="eyebrow">Arcade Kitchen Chaos</p>
+          <h1>Flappy Sausage</h1>
+        </div>
+        <div class="hud-panel">
+          <span class="hud-label">Best</span>
+          <span class="hud-value" id="bestScore">0</span>
+        </div>
+      </div>
+
+      <div class="canvas-frame">
+        <canvas id="gameCanvas" width="420" height="720" aria-label="Flappy Sausage game"></canvas>
+        <div class="overlay overlay-visible" id="startOverlay">
+          <div class="overlay-card">
+            <p class="overlay-kicker">Tap To Toast</p>
+            <h2>Keep the sausage flying</h2>
+            <p class="overlay-copy">Dodge the knives and forks, flap through the gaps, and survive the breakfast rush.</p>
+            <div class="overlay-actions">
+              <button id="startButton" type="button">Start Game</button>
+              <p>Controls: <strong>Space</strong>, <strong>Click</strong>, or <strong>Tap</strong></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="overlay" id="gameOverOverlay">
+          <div class="overlay-card">
+            <p class="overlay-kicker">Order Up</p>
+            <h2>Game Over</h2>
+            <p class="overlay-copy">You clipped the cutlery.</p>
+            <div class="score-grid">
+              <div>
+                <span class="score-label">Score</span>
+                <span class="score-value" id="finalScore">0</span>
+              </div>
+              <div>
+                <span class="score-label">Best</span>
+                <span class="score-value" id="finalBestScore">0</span>
+              </div>
+            </div>
+            <div class="overlay-actions">
+              <button id="restartButton" type="button">Play Again</button>
+              <p>Press <strong>R</strong> to restart instantly.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item">
+          <img src="assets/sausage.svg" alt="" width="40" height="40">
+          <span>Sausage pilot</span>
+        </div>
+        <div class="legend-item">
+          <img src="assets/knife.svg" alt="" width="40" height="40">
+          <img src="assets/fork.svg" alt="" width="40" height="40">
+          <span>Knife and fork obstacles</span>
+        </div>
+        <div class="legend-item">
+          <img src="assets/bean.svg" alt="" width="40" height="40">
+          <span>Beans in the background</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>

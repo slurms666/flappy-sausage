@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 100" role="img" aria-labelledby="title desc">
+  <title id="title">Cartoon sausage</title>
+  <desc id="desc">A smiling flying sausage with little wings.</desc>
+  <defs>
+    <linearGradient id="body" x1="0%" x2="100%" y1="0%" y2="0%">
+      <stop offset="0%" stop-color="#cf5a45"/>
+      <stop offset="50%" stop-color="#e67d57"/>
+      <stop offset="100%" stop-color="#bf4b3e"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0%" x2="0%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffd2a0" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#ffd2a0" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="90" cy="54" rx="72" ry="31" fill="url(#body)" stroke="#8a302a" stroke-width="5"/>
+  <ellipse cx="82" cy="42" rx="48" ry="14" fill="url(#shine)"/>
+  <circle cx="133" cy="53" r="3.8" fill="#3a2016"/>
+  <circle cx="145" cy="53" r="3.8" fill="#3a2016"/>
+  <path d="M132 66c4 5 11 8 19 8 8 0 15-3 19-8" fill="none" stroke="#6d231f" stroke-linecap="round" stroke-width="4"/>
+  <ellipse cx="47" cy="34" rx="17" ry="10" fill="#fff2e7" stroke="#dca991" stroke-width="3"/>
+  <ellipse cx="42" cy="71" rx="15" ry="8" fill="#fff2e7" stroke="#dca991" stroke-width="3"/>
+  <path d="M51 35c-13 5-23 14-32 28" fill="none" stroke="#fff2e7" stroke-linecap="round" stroke-width="8"/>
+  <path d="M49 68c-13-4-22-10-31-20" fill="none" stroke="#fff2e7" stroke-linecap="round" stroke-width="8"/>
+  <path d="M154 24c8 4 14 11 16 19" fill="none" stroke="#8a302a" stroke-linecap="round" stroke-width="5"/>
+  <path d="M156 84c8-3 14-11 16-20" fill="none" stroke="#8a302a" stroke-linecap="round" stroke-width="5"/>
+</svg>
