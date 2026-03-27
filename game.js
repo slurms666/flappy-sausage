@@ -36,6 +36,8 @@ const game = {
   obstacles: [],
 };
 
+let audioContext;
+
 bestScoreEl.textContent = String(game.bestScore);
 drawScene(0);
 
@@ -128,6 +130,7 @@ function resetGame() {
 
 function flap() {
   game.bird.velocity = -380;
+  playJumpChime();
 }
 
 function loop(timestamp) {
@@ -485,4 +488,50 @@ function randomBetween(min, max) {
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
+}
+
+function playJumpChime() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+
+  if (!AudioContextClass) {
+    return;
+  }
+
+  if (!audioContext) {
+    audioContext = new AudioContextClass();
+  }
+
+  if (audioContext.state === "suspended") {
+    audioContext.resume().catch(() => {});
+  }
+
+  const startTime = audioContext.currentTime;
+
+  const mainGain = audioContext.createGain();
+  mainGain.gain.setValueAtTime(0.0001, startTime);
+  mainGain.gain.exponentialRampToValueAtTime(0.055, startTime + 0.015);
+  mainGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.24);
+  mainGain.connect(audioContext.destination);
+
+  const mainOscillator = audioContext.createOscillator();
+  mainOscillator.type = "sine";
+  mainOscillator.frequency.setValueAtTime(880, startTime);
+  mainOscillator.frequency.exponentialRampToValueAtTime(1174.66, startTime + 0.18);
+  mainOscillator.connect(mainGain);
+  mainOscillator.start(startTime);
+  mainOscillator.stop(startTime + 0.24);
+
+  const accentGain = audioContext.createGain();
+  accentGain.gain.setValueAtTime(0.0001, startTime + 0.03);
+  accentGain.gain.exponentialRampToValueAtTime(0.025, startTime + 0.055);
+  accentGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.18);
+  accentGain.connect(audioContext.destination);
+
+  const accentOscillator = audioContext.createOscillator();
+  accentOscillator.type = "triangle";
+  accentOscillator.frequency.setValueAtTime(587.33, startTime + 0.03);
+  accentOscillator.frequency.exponentialRampToValueAtTime(783.99, startTime + 0.18);
+  accentOscillator.connect(accentGain);
+  accentOscillator.start(startTime + 0.03);
+  accentOscillator.stop(startTime + 0.18);
 }
