@@ -21,7 +21,6 @@ const art = {
   sausage: loadImage("assets/sausage.svg"),
   bean: loadImage("assets/bean.svg"),
   mushroom: loadImage("assets/mushroom.svg"),
-  knife: loadImage("assets/knife.svg"),
   fork: loadImage("assets/fork.svg"),
 };
 
@@ -340,16 +339,15 @@ function drawKitchenSilhouette(timeSeconds) {
 
 function drawObstacles() {
   for (const obstacle of game.obstacles) {
-    drawObstacleColumn(obstacle, "knife", true);
-    drawObstacleColumn(obstacle, "fork", false);
+    drawObstacleColumn(obstacle, true);
+    drawObstacleColumn(obstacle, false);
   }
 }
 
-function drawObstacleColumn(obstacle, type, upsideDown) {
+function drawObstacleColumn(obstacle, upsideDown) {
   const layout = getObstacleLayout(obstacle, upsideDown);
-  const utensil = type === "knife" ? art.knife : art.fork;
 
-  ctx.fillStyle = type === "knife" ? "#c5d0da" : "#d9e2e8";
+  ctx.fillStyle = "#d9e2e8";
   ctx.fillRect(layout.shaft.x, layout.shaft.y, layout.shaft.width, layout.shaft.height);
 
   ctx.fillStyle = "rgba(255,255,255,0.32)";
@@ -361,7 +359,7 @@ function drawObstacleColumn(obstacle, type, upsideDown) {
     ctx.scale(1, -1);
     ctx.translate(-(layout.head.x + layout.head.width / 2), -(layout.head.y + layout.head.height / 2));
   }
-  drawImageOrFallback(utensil, layout.head.x, layout.head.y, layout.head.width, layout.head.height);
+  drawImageOrFallback(art.fork, layout.head.x, layout.head.y, layout.head.width, layout.head.height);
   ctx.restore();
 }
 
@@ -391,28 +389,13 @@ function getObstacleLayout(obstacle, upsideDown) {
 
 function getObstacleHitboxes(obstacle, upsideDown) {
   const layout = getObstacleLayout(obstacle, upsideDown);
-
-  if (upsideDown) {
-    return [
-      {
-        x: layout.shaft.x,
-        y: layout.shaft.y,
-        width: layout.shaft.width,
-        height: layout.shaft.height,
-      },
-      {
-        x: layout.head.x + 31,
-        y: layout.head.y + 8,
-        width: layout.head.width - 62,
-        height: Math.max(0, layout.head.height - 14),
-      },
-    ].filter((rect) => rect.width > 0 && rect.height > 0);
-  }
-
   const tineHeight = Math.min(48, Math.max(18, layout.head.height - 34));
-  const tineY = layout.head.y + 4;
+  const tineY = upsideDown
+    ? layout.head.y + layout.head.height - tineHeight - 4
+    : layout.head.y + 4;
   const tineWidth = 8;
   const tineXs = [layout.head.x + 17, layout.head.x + 37, layout.head.x + 57, layout.head.x + 77];
+  const shoulderY = upsideDown ? layout.head.y + 6 : layout.head.y + 42;
 
   return [
     {
@@ -423,7 +406,7 @@ function getObstacleHitboxes(obstacle, upsideDown) {
     },
     {
       x: layout.head.x + 33,
-      y: layout.head.y + 42,
+      y: shoulderY,
       width: layout.head.width - 66,
       height: Math.max(0, layout.head.height - 36),
     },
