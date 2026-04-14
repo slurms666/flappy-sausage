@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Flappy Sausage</string>
+    <string name="title_activity_main">Flappy Sausage</string>
+    <string name="package_name">com.slurms666.flappysausage</string>
+    <string name="custom_url_scheme">com.slurms666.flappysausage</string>
+</resources>
