@@ -1,19 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 220" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 118" role="img" aria-labelledby="title desc">
   <title id="title">Cartoon fork</title>
-  <desc id="desc">A vertical silver fork with four clear prongs and a long handle.</desc>
+  <desc id="desc">A polished cartoon fork head with four rounded prongs and a tapered neck.</desc>
   <defs>
-    <linearGradient id="forkMetal" x1="0%" x2="100%" y1="0%" y2="100%">
-      <stop offset="0%" stop-color="#f8fbfd"/>
-      <stop offset="60%" stop-color="#d8e1e8"/>
-      <stop offset="100%" stop-color="#b9c5cf"/>
+    <linearGradient id="forkMetal" x1="13%" x2="88%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#e8f0f5"/>
+      <stop offset="72%" stop-color="#c7d4dd"/>
+      <stop offset="100%" stop-color="#9dafbb"/>
     </linearGradient>
+    <linearGradient id="forkShade" x1="0%" x2="100%" y1="0%" y2="0%">
+      <stop offset="0%" stop-color="#8fa2af"/>
+      <stop offset="52%" stop-color="#f7fbfd"/>
+      <stop offset="100%" stop-color="#9babb5"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-15%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="2" flood-color="#667883" flood-opacity="0.24"/>
+    </filter>
   </defs>
-  <rect x="46" y="90" width="28" height="112" rx="13" fill="url(#forkMetal)" stroke="#97aab7" stroke-width="4"/>
-  <path d="M30 90H90V108H30Z" fill="url(#forkMetal)" stroke="#97aab7" stroke-width="4" stroke-linejoin="round"/>
-  <rect x="24" y="16" width="11" height="82" rx="5.5" fill="url(#forkMetal)" stroke="#97aab7" stroke-width="3.5"/>
-  <rect x="44" y="16" width="11" height="82" rx="5.5" fill="url(#forkMetal)" stroke="#97aab7" stroke-width="3.5"/>
-  <rect x="64" y="16" width="11" height="82" rx="5.5" fill="url(#forkMetal)" stroke="#97aab7" stroke-width="3.5"/>
-  <rect x="84" y="16" width="11" height="82" rx="5.5" fill="url(#forkMetal)" stroke="#97aab7" stroke-width="3.5"/>
-  <path d="M52 104H68" stroke="#ffffff" stroke-linecap="round" stroke-width="4" stroke-opacity="0.7"/>
-  <path d="M52 128H68" stroke="#ffffff" stroke-linecap="round" stroke-width="4" stroke-opacity="0.55"/>
+  <g filter="url(#softShadow)" stroke="#8399a7" stroke-linejoin="round">
+    <path d="M18 64C25 72 36 76 48 76H72C84 76 95 72 102 64L94 88C90 100 77 107 60 107C43 107 30 100 26 88Z" fill="url(#forkMetal)" stroke-width="4"/>
+    <path d="M46 93C50 97 54 99 60 99C66 99 70 97 74 93L78 118H42Z" fill="url(#forkShade)" stroke-width="4"/>
+    <path d="M18 69L21 15C21 8 25 4 31 4C37 4 41 8 41 15L39 68Z" fill="url(#forkMetal)" stroke-width="3.5"/>
+    <path d="M42 70L44 14C44 8 48 4 54 4C60 4 63 8 63 14L62 71Z" fill="url(#forkMetal)" stroke-width="3.5"/>
+    <path d="M58 71L57 14C57 8 60 4 66 4C72 4 76 8 76 14L78 70Z" fill="url(#forkMetal)" stroke-width="3.5"/>
+    <path d="M81 68L79 15C79 8 83 4 89 4C95 4 99 8 99 15L102 69Z" fill="url(#forkMetal)" stroke-width="3.5"/>
+  </g>
+  <path d="M27 17L25 59" stroke="#ffffff" stroke-linecap="round" stroke-width="3" stroke-opacity="0.58"/>
+  <path d="M50 16L49 58" stroke="#ffffff" stroke-linecap="round" stroke-width="3" stroke-opacity="0.5"/>
+  <path d="M69 16L71 58" stroke="#ffffff" stroke-linecap="round" stroke-width="3" stroke-opacity="0.45"/>
+  <path d="M36 83C44 90 52 93 60 93C68 93 76 90 84 83" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-width="4" stroke-opacity="0.45"/>
+  <path d="M50 103H70" stroke="#ffffff" stroke-linecap="round" stroke-width="3.5" stroke-opacity="0.5"/>
 </svg>
