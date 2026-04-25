@@ -1,5 +1,5 @@
 const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d", { alpha: false });
 
 const startOverlay = document.getElementById("startOverlay");
 const gameOverOverlay = document.getElementById("gameOverOverlay");
@@ -37,8 +37,12 @@ const game = {
 };
 
 let audioContext;
+let backgroundLayer;
+let counterLayer;
 
 bestScoreEl.textContent = String(game.bestScore);
+backgroundLayer = createSceneLayer(drawStaticBackground, { alpha: false });
+counterLayer = createSceneLayer(drawStaticCounter);
 drawScene(0);
 
 startButton.addEventListener("click", startGame);
@@ -282,36 +286,7 @@ function drawScene(timeSeconds) {
 }
 
 function drawBackground() {
-  ctx.clearRect(0, 0, WIDTH, HEIGHT);
-
-  ctx.fillStyle = "#f8eee5";
-  ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-  const patternSize = 46;
-  for (let y = 0; y < HEIGHT - GROUND_HEIGHT; y += patternSize) {
-    for (let x = 0; x < WIDTH; x += patternSize) {
-      ctx.fillStyle = (x / patternSize + y / patternSize) % 2 === 0 ? "#fff8f0" : "#cb3436";
-      ctx.fillRect(x, y, patternSize, patternSize);
-    }
-  }
-
-  ctx.save();
-  ctx.globalAlpha = 0.18;
-  ctx.strokeStyle = "#ffffff";
-  ctx.lineWidth = 3;
-  for (let x = -HEIGHT; x < WIDTH + HEIGHT; x += 18) {
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x + HEIGHT, HEIGHT);
-    ctx.stroke();
-  }
-  for (let x = 0; x < WIDTH + HEIGHT; x += 18) {
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x - HEIGHT, HEIGHT);
-    ctx.stroke();
-  }
-  ctx.restore();
+  ctx.drawImage(backgroundLayer, 0, 0);
 }
 
 function drawSkyDrifters() {
@@ -423,21 +398,56 @@ function getObstacleHitboxes(obstacle, upsideDown) {
 }
 
 function drawCounter() {
-  const top = HEIGHT - GROUND_HEIGHT;
+  ctx.drawImage(counterLayer, 0, 0);
+}
 
-  ctx.fillStyle = "#b26042";
-  ctx.fillRect(0, top, WIDTH, GROUND_HEIGHT);
+function drawStaticBackground(targetCtx) {
+  targetCtx.fillStyle = "#f8eee5";
+  targetCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  ctx.fillStyle = "#d28756";
-  ctx.fillRect(0, top, WIDTH, 24);
-
-  ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
-  for (let x = -30; x < WIDTH + 40; x += 48) {
-    ctx.fillRect(x, top + 8, 20, GROUND_HEIGHT - 20);
+  const patternSize = 46;
+  for (let y = 0; y < HEIGHT - GROUND_HEIGHT; y += patternSize) {
+    for (let x = 0; x < WIDTH; x += patternSize) {
+      targetCtx.fillStyle = (x / patternSize + y / patternSize) % 2 === 0 ? "#fff8f0" : "#cb3436";
+      targetCtx.fillRect(x, y, patternSize, patternSize);
+    }
   }
 
-  ctx.fillStyle = "#875039";
-  ctx.fillRect(0, HEIGHT - 18, WIDTH, 18);
+  targetCtx.save();
+  targetCtx.globalAlpha = 0.18;
+  targetCtx.strokeStyle = "#ffffff";
+  targetCtx.lineWidth = 3;
+  for (let x = -HEIGHT; x < WIDTH + HEIGHT; x += 18) {
+    targetCtx.beginPath();
+    targetCtx.moveTo(x, 0);
+    targetCtx.lineTo(x + HEIGHT, HEIGHT);
+    targetCtx.stroke();
+  }
+  for (let x = 0; x < WIDTH + HEIGHT; x += 18) {
+    targetCtx.beginPath();
+    targetCtx.moveTo(x, 0);
+    targetCtx.lineTo(x - HEIGHT, HEIGHT);
+    targetCtx.stroke();
+  }
+  targetCtx.restore();
+}
+
+function drawStaticCounter(targetCtx) {
+  const top = HEIGHT - GROUND_HEIGHT;
+
+  targetCtx.fillStyle = "#b26042";
+  targetCtx.fillRect(0, top, WIDTH, GROUND_HEIGHT);
+
+  targetCtx.fillStyle = "#d28756";
+  targetCtx.fillRect(0, top, WIDTH, 24);
+
+  targetCtx.fillStyle = "rgba(255, 255, 255, 0.2)";
+  for (let x = -30; x < WIDTH + 40; x += 48) {
+    targetCtx.fillRect(x, top + 8, 20, GROUND_HEIGHT - 20);
+  }
+
+  targetCtx.fillStyle = "#875039";
+  targetCtx.fillRect(0, HEIGHT - 18, WIDTH, 18);
 }
 
 function drawBird() {
@@ -454,7 +464,7 @@ function drawForegroundHud() {
   ctx.save();
   ctx.textAlign = "center";
   ctx.fillStyle = "rgba(75, 29, 24, 0.15)";
-  ctx.font = '800 60px "Baloo 2"';
+  ctx.font = '800 60px "Trebuchet MS", "Arial Rounded MT Bold", system-ui, sans-serif';
   ctx.fillText(String(game.score), WIDTH / 2, 90);
   ctx.fillStyle = "#fffaf3";
   ctx.lineWidth = 8;
@@ -465,7 +475,7 @@ function drawForegroundHud() {
 
   if (game.state === "ready") {
     ctx.fillStyle = "rgba(90, 29, 23, 0.65)";
-    ctx.font = '700 18px "Nunito"';
+    ctx.font = '700 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
     ctx.fillText("Press space or tap to flap", WIDTH / 2, HEIGHT - 154);
   }
 
@@ -488,6 +498,15 @@ function randomBetween(min, max) {
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
+}
+
+function createSceneLayer(drawFn, contextOptions = {}) {
+  const layer = document.createElement("canvas");
+  layer.width = WIDTH;
+  layer.height = HEIGHT;
+  const layerCtx = layer.getContext("2d", contextOptions);
+  drawFn(layerCtx);
+  return layer;
 }
 
 function playJumpChime() {

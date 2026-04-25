@@ -105,6 +105,6 @@ cmd /c npm run android:install
 
 - Orientation is locked to portrait in `android/app/src/main/AndroidManifest.xml` because the current game layout is portrait-first.
 - The device screen is kept awake in `android/app/src/main/java/com/slurms666/flappysausage/MainActivity.java`.
-- Fullscreen / immersive mode should be handled in `MainActivity.java` if you want to hide status and navigation bars more aggressively later.
+- Fullscreen / immersive mode is handled in `MainActivity.java`.
 - Back button behavior is currently sane for this single-screen game: there is no in-app navigation stack, so Android back returns out of the app rather than navigating through fake pages.
 - Touch input stays in the web game, and the existing tap-to-flap plus jump chime behavior is preserved inside the Capacitor shell.
